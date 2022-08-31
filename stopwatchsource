@@ -1,0 +1,99 @@
+local Stopwatch = Instance.new("ScreenGui")
+local Timer = Instance.new("TextLabel")
+local shadowHolder = Instance.new("Frame")
+local ambientShadow = Instance.new("ImageLabel")
+local penumbraShadow = Instance.new("ImageLabel")
+local umbraShadow = Instance.new("ImageLabel")
+local Gradient = Instance.new("Frame")
+local UIGradient = Instance.new("UIGradient")
+local UICorner = Instance.new("UICorner")
+
+Stopwatch.Name = "Stopwatch"
+Stopwatch.Parent = game.CoreGui
+
+Timer.Name = "Timer"
+Timer.Parent = Stopwatch
+Timer.Active = true
+Timer.AnchorPoint = Vector2.new(0.5, 0.5)
+Timer.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+Timer.BackgroundTransparency = 1.000
+Timer.BorderSizePixel = 0
+Timer.Position = UDim2.new(0.5, 0, 0.5, 0)
+Timer.Size = UDim2.new(0, 200, 0, 50)
+Timer.ZIndex = 3
+Timer.Font = Enum.Font.SourceSansLight
+Timer.Text = "00:00:00"
+Timer.TextColor3 = Color3.fromRGB(0, 0, 0)
+Timer.TextSize = 32.000
+Timer.Draggable = true
+
+shadowHolder.Name = "shadowHolder"
+shadowHolder.Parent = Timer
+shadowHolder.BackgroundTransparency = 1.000
+shadowHolder.Size = UDim2.new(1.03499997, 0, 1.12, 0)
+shadowHolder.ZIndex = 0
+
+ambientShadow.Name = "ambientShadow"
+ambientShadow.Parent = shadowHolder
+ambientShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+ambientShadow.BackgroundTransparency = 1.000
+ambientShadow.Position = UDim2.new(0.5, 0, 0.5, 2)
+ambientShadow.Size = UDim2.new(1, 4, 1, 4)
+ambientShadow.Image = "rbxassetid://1316045217"
+ambientShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+ambientShadow.ImageTransparency = 0.880
+ambientShadow.ScaleType = Enum.ScaleType.Slice
+ambientShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+
+penumbraShadow.Name = "penumbraShadow"
+penumbraShadow.Parent = shadowHolder
+penumbraShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+penumbraShadow.BackgroundTransparency = 1.000
+penumbraShadow.Position = UDim2.new(0.5, 0, 0.5, 2)
+penumbraShadow.Size = UDim2.new(1, 4, 1, 4)
+penumbraShadow.Image = "rbxassetid://1316045217"
+penumbraShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+penumbraShadow.ImageTransparency = 0.880
+penumbraShadow.ScaleType = Enum.ScaleType.Slice
+penumbraShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+
+umbraShadow.Name = "umbraShadow"
+umbraShadow.Parent = shadowHolder
+umbraShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+umbraShadow.BackgroundTransparency = 1.000
+umbraShadow.Position = UDim2.new(0.5, 0, 0.5, 2)
+umbraShadow.Size = UDim2.new(1, 4, 1, 4)
+umbraShadow.Image = "rbxassetid://1316045217"
+umbraShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+umbraShadow.ImageTransparency = 0.860
+umbraShadow.ScaleType = Enum.ScaleType.Slice
+umbraShadow.SliceCenter = Rect.new(10, 10, 118, 118)
+
+Gradient.Name = "Gradient"
+Gradient.Parent = Timer
+Gradient.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Gradient.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Gradient.BorderSizePixel = 0
+Gradient.Size = UDim2.new(0, 200, 0, 50)
+
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(230, 239, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+UIGradient.Parent = Gradient
+
+UICorner.CornerRadius = UDim.new(0, 4)
+UICorner.Parent = Gradient
+
+local RunService = game:GetService("RunService")
+local label = Timer
+
+local function startTimer(timeLeft)
+	RunService:BindToRenderStep("Timer", Enum.RenderPriority.Last.Value + 1, function(delta)
+		timeLeft += delta
+		local minutes = math.floor(timeLeft / 60)
+		local seconds = math.floor(timeLeft % 60)
+		local hundreths = math.floor(timeLeft % 1 * 100)
+		
+		label.Text = string.format("%02i:%02i:%02i", minutes, seconds, hundreths)
+	end)
+end
+
+startTimer(0)
