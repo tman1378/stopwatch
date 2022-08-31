@@ -1,5 +1,8 @@
 repeat wait() until game:IsLoaded()
 
+_G.copy = false --set to true if you want to copy the timer to your clipboard after it stops
+_G.start = false --set to true if you want the timer to start when the script is executed
+
 local Stopwatch = Instance.new("ScreenGui")
 local Timer = Instance.new("TextLabel")
 local shadowHolder = Instance.new("Frame")
@@ -9,6 +12,9 @@ local umbraShadow = Instance.new("ImageLabel")
 local Gradient = Instance.new("Frame")
 local UIGradient = Instance.new("UIGradient")
 local UICorner = Instance.new("UICorner")
+local Close = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+local StartStop = Instance.new("TextButton")
 
 Stopwatch.Name = "Stopwatch"
 Stopwatch.Parent = game.CoreGui
@@ -78,17 +84,68 @@ Gradient.BorderColor3 = Color3.fromRGB(27, 42, 53)
 Gradient.BorderSizePixel = 0
 Gradient.Size = UDim2.new(0, 200, 0, 50)
 
-UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(230, 239, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}
+UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(247, 248, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(214, 214, 214))}
 UIGradient.Parent = Gradient
 
 UICorner.CornerRadius = UDim.new(0, 4)
 UICorner.Parent = Gradient
 
+Close.Name = "Close"
+Close.Parent = Timer
+Close.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+Close.BorderSizePixel = 0
+Close.Position = UDim2.new(0.922999978, 0, -0, 0)
+Close.Size = UDim2.new(0, 15, 0, 15)
+Close.ZIndex = 2
+Close.Font = Enum.Font.SourceSansBold
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextScaled = true
+Close.TextSize = 14.000
+Close.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextWrapped = true
+
+local TweenService = game:GetService("TweenService")
+local TweenSpeed = 0.15
+local TweenFunction = TweenInfo.new(TweenSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0)
+local Template = Close
+
+Close.MouseButton1Click:connect(function()
+	Stopwatch:Destroy()
+end)
+Close.MouseEnter:connect(function()
+	local Color = Color3.fromRGB(200, 0, 0)
+	TweenService:Create(Template, TweenFunction, {BackgroundColor3 = Color}):Play()
+end)
+Close.MouseLeave:connect(function()
+	local Color = Color3.fromRGB(200, 200, 200)
+	TweenService:Create(Template, TweenFunction, {BackgroundColor3 = Color}):Play()
+end)
+
+UICorner_2.CornerRadius = UDim.new(0, 4)
+UICorner_2.Parent = Close
+
+StartStop.Name = "StartStop"
+StartStop.Parent = Timer
+StartStop.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+StartStop.BackgroundTransparency = 1.000
+StartStop.BorderSizePixel = 0
+StartStop.Position = UDim2.new(0.725000024, 0, 0.300000012, 0)
+StartStop.Size = UDim2.new(0, 25, 0, 20)
+StartStop.ZIndex = 2
+StartStop.Font = Enum.Font.SourceSansBold
+StartStop.Text = "▶"
+StartStop.TextColor3 = Color3.fromRGB(30, 30, 30)
+StartStop.TextSize = 17.000
+StartStop.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+StartStop.TextWrapped = true
+
 local RunService = game:GetService("RunService")
 local label = Timer
+local TimerBindingName = "Timer"
 
 local function startTimer(timeLeft)
-	RunService:BindToRenderStep("Timer", Enum.RenderPriority.Last.Value + 1, function(delta)
+	RunService:BindToRenderStep(TimerBindingName, Enum.RenderPriority.Last.Value + 1, function(delta)
 		timeLeft += delta
 		local minutes = math.floor(timeLeft / 60)
 		local seconds = math.floor(timeLeft % 60)
@@ -98,4 +155,21 @@ local function startTimer(timeLeft)
 	end)
 end
 
-startTimer(0)
+if _G.start == true then
+	startTimer(0)
+	StartStop.Text = "■"
+end
+if _G.start == false or StartStop.Text == "■" then
+	StartStop.MouseButton1Click:connect(function()
+		if StartStop.Text == "▶" then
+			startTimer(0)
+			StartStop.Text = "■"
+		else
+			RunService:UnbindFromRenderStep(TimerBindingName)
+			StartStop.Text = "▶"
+			if _G.copy == true then
+				setclipboard(Timer.Text)
+			end
+		end
+	end)
+end
