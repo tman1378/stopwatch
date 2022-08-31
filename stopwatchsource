@@ -1,3 +1,5 @@
+repeat wait() until game:IsLoaded()
+
 local Stopwatch = Instance.new("ScreenGui")
 local Timer = Instance.new("TextLabel")
 local shadowHolder = Instance.new("Frame")
