@@ -1,8 +1,5 @@
 repeat wait() until game:IsLoaded()
 
-_G.copy = false --set to true if you want to copy the timer to your clipboard after it stops
-_G.start = false --set to true if you want the timer to start when the script is executed
-
 local Stopwatch = Instance.new("ScreenGui")
 local Timer = Instance.new("TextLabel")
 local shadowHolder = Instance.new("Frame")
